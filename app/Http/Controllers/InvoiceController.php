@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Invoice;
+use App\Product;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,7 +40,20 @@ class InvoiceController extends Controller
      */
     public function create()
     {
+        $products = [];
+        $users = [];
 
+        $usersResult = User::where('role', 'customer')->get();
+        foreach ($usersResult as $item) {
+            $users[$item["email"]] = $item["id"];
+        }
+
+        $productResults = Product::all();
+        foreach ($productResults as $item) {
+            $products[$item["name"]] = $item["id"];
+        }
+
+        return view('invoices.create', compact('products', 'users'));
     }
 
     /**
