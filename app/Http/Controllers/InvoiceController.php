@@ -119,6 +119,10 @@ class InvoiceController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $invoice = Invoice::findOrFail($id);
+
+        $invoice->delete();
+
+        return redirect('invoice/show')->with('status', 'Factuur is verwijderd!');
     }
 }

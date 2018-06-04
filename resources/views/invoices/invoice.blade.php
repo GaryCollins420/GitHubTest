@@ -20,6 +20,8 @@
                                     <th>Datum</th>
                                     <th>Naam</th>
                                     <th>Product</th>
+                                    <th>Specificatie</th>
+                                    <th>Verwijderen</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -30,6 +32,23 @@
                                         <td>{{$row->street}}</td>
                                         <td>{{$row->product}}</td>
                                         <td><a href="/invoice/{{ $row->id }}">Details</a></td>
+                                        <td>
+                                            <form method="POST" action="{{ route('invoicedestroy', [$row->id]) }}">
+                                                {{ csrf_field() }}
+                                                {{ method_field('DELETE') }}
+                                                <button
+                                                        @php
+                                                        $expirationDate = new \DateTime();
+                                                        $expirationDate->sub(new \DateInterval("P7Y"));
+                                                        $invoiceDate = \DateTime::createFromFormat("Y-m-d", $row->date);
+
+                                                        if ($expirationDate < $invoiceDate) {
+                                                            echo "disabled";
+                                                        }
+                                                        @endphp
+                                                        type="submit" class="btn btn-danger" onclick="return confirm('Weet je zeker dat je deze factuur wilt verwijderen?')">Verwijder</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
